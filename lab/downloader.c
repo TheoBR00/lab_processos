@@ -59,7 +59,7 @@
 void main(int argc, char **argv){
     pid_t filho;
 
-    FILE *fp;
+    int fp;
 
     FILE *file;
 
@@ -143,8 +143,13 @@ void main(int argc, char **argv){
     }
 
     else{
-        
-    }
+
+        printf("Entrou else\n");
+
+        FILE *escreve;
+
+        char buf[56];
+        char buf2[56];
 
     filho = 0;
 
@@ -152,21 +157,27 @@ void main(int argc, char **argv){
 
        // FILE *fp_2;
 
+       printf("Filho = 0\n");
+
        char link[1000];
 
        int i = 0;
        int j = 0;
+
+       //printf("%c\n", argv[])
        
-       if (argv[1][0]=='h' && argv[1][1]=='t' && argv[1][2]=='t' && argv[1][3]=='p' && argv[1][4]==':' ) {
+       if (argv[2][0]=='h' && argv[2][1]=='t' && argv[2][2]=='t' && argv[2][3]=='p' && argv[2][4]==':' ) {
            i =7;
-       } else if (argv[1][0]=='h' && argv[1][1]=='t' && argv[1][2]=='t' && argv[1][3]=='p' && argv[1][4]=='s' && argv[1][5] == ':' ) {
+           printf("i = 7\n");
+       } else if (argv[2][0]=='h' && argv[2][1]=='t' && argv[2][2]=='t' && argv[2][3]=='p' && argv[2][4]=='s' && argv[2][5] == ':' ) {
            i = 8;
+           printf("i = 8\n");
        }
 
-        printf("%s\n", argv[1]);
+        printf("%s\n", argv[2]);
 
-       for(j = 0; argv[1][i] != '\0'; i++){
-           link[j] = argv[1][i];
+       for(j = 0; argv[2][i] != '\0'; i++){
+           link[j] = argv[2][i];
            if(link[j] == '.'){
                link[j] = '_';
            }
@@ -180,39 +191,136 @@ void main(int argc, char **argv){
         printf("Link: %s\n", link);
         //sleep(10);
 
-        fp = fopen(argv[3], "wb");
+        //fp = fopen(argv[2], "rb");
+        fp = open(argv[2], O_RDONLY, 0700);
 
-        CURL *curl = curl_easy_init();
+        //sleep(2);
+        //printf("%c\n", fp[0]);
 
-        CURLcode r;
-        curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
-        r = curl_easy_perform(curl);
+        escreve = fopen("lista_html.txt", "wb");
 
-        printf("%d\n", r);
+        printf("Abriu arq\n");
 
-        if(CURLE_OK == r){
-            char *info;
-                r = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &info);
+        int bytes_read = 1;
 
-                printf("Pegou info\n");
+        int num = 0;
+        int k = 0;
+        int rep = 0;
 
-                if((CURLE_OK == r) && info){
-                    printf("Resolvendo: %s\n", info);
-                    //write(fd1, info, 1);
-                    //close(fd1);
+        int n = 0;
+
+        int m;
+
+        while(bytes_read > 0){
+            bytes_read = read(fp, &buf, 55);
+            printf("Buf %d: %s\n", k, buf);
+
+            for(m = n; buf[m] != '\0'; m++){
+                //printf("%c\n", buf[m]);
+                //if(buf[m] == '"'){
+                //    rep++;
+                //}
+                if(buf[m] == '\n'){
+                    break;
                 }
-        }
+                buf2[m] = buf[m];
+                //if(rep % 2 == 0){
+                //    break;
+                //}
+                printf("%c\n", buf2[m]);
+            }
+            
+            n = m;
+            n++;
+
+            CURL *curl = curl_easy_init();
+
+            CURLcode r;
+            printf("URL: %s\n", buf2);
+            curl_easy_setopt(curl, CURLOPT_URL, buf2);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, escreve);
+            curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+            r = curl_easy_perform(curl);
+            sleep(2);
+
+            printf("r: %d\n", r);
+
+            if(CURLE_OK == r){
+                char *info;
+                    r = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &info);
+
+                    printf("Pegou info\n");
+
+                    if((CURLE_OK == r) && info){
+                        printf("Resolvendo: %s\n", info);
+                        printf("%s resolvida com sucesso!\n", buf2);
+                        //write(fd1, info, 1);
+                        //close(fd1);
+                    }
+            }
 
         else{
             printf("Error: %s\n", curl_easy_strerror(r));
         }
 
+            //write(escreve, &buf, 1);
+            //printf("%s\n", buf);
+            //fprintf(fp, "%c", buf);
+            num++;
+            //printf("%d\n", bytes_read);
+            k++;
+            //sleep(2);
+        }
+
+        //printf("%s\n", buf);
+
+        printf("Num: %d\n", num);
+
+        //CURL *curl = curl_easy_init();
+
+        //CURLcode r;
+        //curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
+        //curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+        //curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+        //r = curl_easy_perform(curl);
+
+        //printf("%d\n", r);
+
+        //if(CURLE_OK == r){
+        //    char *info;
+        //        r = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &info);
+
+        //        printf("Pegou info\n");
+
+        //        if((CURLE_OK == r) && info){
+        //            printf("Resolvendo: %s\n", info);
+                    //write(fd1, info, 1);
+                    //close(fd1);
+        //        }
+        //}
+
+        //else{
+        //    printf("Error: %s\n", curl_easy_strerror(r));
+        //}
+
         
 
 
         return 0;
+    }
+
+    else{
+
+        
+
+        int wstatus;
+        wait(&wstatus);
+
+        //fclose(fp);
+
+        printf("Filho acabou\n");
+        printf("Terminou normal?: %d\n", WIFEXITED(wstatus));
+    }
 
 
        //for(int j = 0; link[j] != '\0'; j++){
@@ -228,7 +336,7 @@ void main(int argc, char **argv){
 
         
 
-        //CURL *curl = curl_easy_init();
+        CURL *curl = curl_easy_init();
 
         if(curl){
 
@@ -269,16 +377,17 @@ void main(int argc, char **argv){
 
     }
 
-    else{
+    //else{
 
         
 
-        int wstatus;
-        wait(&wstatus);
+    //    int wstatus;
+    //    wait(&wstatus);
 
         //fclose(fp);
 
-        printf("Filho acabou\n");
-        printf("Terminou normal?: %d\n", WIFEXITED(wstatus));
-    }
+     //   printf("Filho acabou\n");
+     //   printf("Terminou normal?: %d\n", WIFEXITED(wstatus));
+    //}
 }
+
