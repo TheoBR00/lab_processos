@@ -149,7 +149,7 @@ void main(int argc, char **argv){
         FILE *escreve;
 
         char buf[56];
-        char buf2[56];
+        //char buf2[56];
 
     filho = 0;
 
@@ -215,22 +215,29 @@ void main(int argc, char **argv){
             bytes_read = read(fp, &buf, 55);
             printf("Buf %d: %s\n", k, buf);
 
+            char buf2[56];
+
+            int i = 0;
+
             for(m = n; buf[m] != '\0'; m++){
                 //printf("%c\n", buf[m]);
                 //if(buf[m] == '"'){
                 //    rep++;
                 //}
-                if(buf[m] == '\n'){
+                if(buf[i] == '\n'){
+                    i = 0;
                     break;
                 }
-                buf2[m] = buf[m];
+                buf2[i] = buf[m];
                 //if(rep % 2 == 0){
                 //    break;
                 //}
                 printf("%c\n", buf2[m]);
+                i++;
             }
             
             n = m;
+            
             n++;
 
             CURL *curl = curl_easy_init();
