@@ -80,13 +80,18 @@ void main(int argc, char **argv){
 
        for(j = 0; argv[1][i] != '\0'; i++){
            link[j] = argv[1][i];
-           if(link[j] == '.'){
+           if(link[j] == '.' || link[j] == '/'){
                link[j] = '_';
            }
            printf("Linha 87: %c\n", link[j]);
            j++;
        }
        //sleep(10);
+       link[j++] = '.';
+       link[j++] = 'h';
+       link[j++] = 't';
+       link[j++] = 'm';
+       link[j++] = 'l';
        link[j++] = '\0';
 
         
@@ -149,7 +154,10 @@ void main(int argc, char **argv){
         FILE *escreve;
 
         char buf[56];
-        //char buf2[56];
+        
+        char buf2[56];
+
+        char link[56];
 
     filho = 0;
 
@@ -159,36 +167,9 @@ void main(int argc, char **argv){
 
        printf("Filho = 0\n");
 
-       char link[1000];
-
-       int i = 0;
-       int j = 0;
-
        //printf("%c\n", argv[])
        
-       if (argv[2][0]=='h' && argv[2][1]=='t' && argv[2][2]=='t' && argv[2][3]=='p' && argv[2][4]==':' ) {
-           i =7;
-           printf("i = 7\n");
-       } else if (argv[2][0]=='h' && argv[2][1]=='t' && argv[2][2]=='t' && argv[2][3]=='p' && argv[2][4]=='s' && argv[2][5] == ':' ) {
-           i = 8;
-           printf("i = 8\n");
-       }
-
-        printf("%s\n", argv[2]);
-
-       for(j = 0; argv[2][i] != '\0'; i++){
-           link[j] = argv[2][i];
-           if(link[j] == '.'){
-               link[j] = '_';
-           }
-           printf("Linha 87: %c\n", link[j]);
-           j++;
-       }
-       //sleep(10);
-       link[j++] = '\0';
-
-        
-        printf("Link: %s\n", link);
+       
         //sleep(10);
 
         //fp = fopen(argv[2], "rb");
@@ -219,6 +200,12 @@ void main(int argc, char **argv){
 
             int i = 0;
 
+            int l = 0;
+
+            int comeca;
+
+            int p;
+
             for(m = n; buf[m] != '\0'; m++){
                 //printf("%c\n", buf[m]);
                 //if(buf[m] == '"'){
@@ -229,12 +216,40 @@ void main(int argc, char **argv){
                     break;
                 }
                 buf2[i] = buf[m];
+
+                //link[i] = buf2[i];
                 //if(rep % 2 == 0){
                 //    break;
                 //}
                 printf("%c\n", buf2[m]);
                 i++;
             }
+
+            //for()
+
+            printf("link[0] = %c\n", link[0]);
+            printf("link[1] = %c\n", link[1]);
+            printf("link[2] = %c\n", link[2]);
+            printf("link[3] = %c\n", link[3]);
+            printf("link[4] = %c\n", link[4]);
+
+            if (link[0]=='h' && link[1]=='t' && link[2]=='t' && link[3]=='p' && link[4]==':' ) {
+                comeca = 7;
+                printf("l = 7\n");
+            } else if (link[0]=='h' && link[1]=='t' && link[2]=='t' && link[3]=='p' && link[4]=='s' && link[5] == ':' ) {
+                comeca = 8;
+                printf("l = 8\n");
+            }
+
+            //printf("Link: %s\n", link);
+
+            for(l = comeca; link[l] != '\0'; l++){
+                if(link[l] == '.' || link[l] == '/'){
+                    link[l] = '_';
+                }
+            }
+
+            printf("Link: %s\n", link);
             
             n = m;
             
@@ -330,71 +345,7 @@ void main(int argc, char **argv){
     }
 
 
-       //for(int j = 0; link[j] != '\0'; j++){
-
-      // }
-
-       fp = fopen(argv[2], "wb");
-
-
-        //if(argv[1][0] == '-' && argv[1][1] == 'f'){
-        //    fp_2 = fopen(argv[2], "wb");
-        //}
-
-        
-
-        CURL *curl = curl_easy_init();
-
-        if(curl){
-
-            sleep(2);
-
-            CURLcode r;
-            curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-            curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
-            r = curl_easy_perform(curl);
-
-            printf("Fez perform\n");
-
-            if(CURLE_OK == r){
-                char *info;
-                r = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &info);
-
-                printf("Pegou info\n");
-
-                if((CURLE_OK == r) && info){
-                    printf("Resolvendo: %s\n", info);
-                    //write(fd1, info, 1);
-                    //close(fd1);
-                }
-            }
-            else{
-                printf("Error: %s\n", curl_easy_strerror(r));
-            }
-
-            printf("Terminou\n");
-
-            fclose(fp);
-
-            curl_easy_cleanup(curl);
-        }
-
-        //return 2;
-
-    }
-
-    //else{
-
-        
-
-    //    int wstatus;
-    //    wait(&wstatus);
-
-        //fclose(fp);
-
-     //   printf("Filho acabou\n");
-     //   printf("Terminou normal?: %d\n", WIFEXITED(wstatus));
-    //}
+       
+}
 }
 
