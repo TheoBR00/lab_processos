@@ -153,14 +153,14 @@ int main(int argc, char **argv){
 
         FILE *escreve;
 
-        char buf[1000];
+        char buf[4500];
         
         //char buf2[56];
         //char buf2[1000];
 
         char link[56];
 
-    filho = 0;
+    filho = fork();
 
     if(filho == 0){
 
@@ -196,7 +196,7 @@ int main(int argc, char **argv){
         int m;
 
         while(bytes_read > 0 || ativa == 1){
-            bytes_read = read(fp, &buf, 300);
+            bytes_read = read(fp, &buf, 4500);
             printf("Buf %d: %s\n", k, buf);
 
             rep++;
@@ -204,7 +204,7 @@ int main(int argc, char **argv){
             //printf("REP: %d\n", rep);
 
             //printf("BYTES READ: %d\n", bytes_read);
-            char buf2[1000];
+            char buf2[4000];
 
             int i = 0;
 
@@ -212,26 +212,38 @@ int main(int argc, char **argv){
 
             int comeca = 7;
 
+            //int value = 10;
+
+            //char test = '\n';
+
             //int p;
 
-            for(m = n; buf[m] != '\0'; m++){
+            for(m = n; buf[m] != '\n'; m++){
                 //printf("%c\n", buf[m]);
                 //if(buf[m] == '"'){
                 //    rep++;
                 //}
-                if(buf[i] == '\n'){
-                    i = 0;
-                    break;
-                }
+                //value = strcmp(&buf[i], &test);
+                //printf("Value: %d\n", value);
+
+                //if(buf[i] == '\n'){
+                //    i = 0;
+                //    break;
+                //}
                 buf2[i] = buf[m];
+
+                //if(buf[i] == EOF){
+                //    return 0;
+                //}
 
                 //link[i] = buf2[i];
                 //if(rep % 2 == 0){
                 //    break;
                 //}
-                printf("%c\n", buf2[m]);
+                printf("%c\n", buf2[i]);
                 i++;
             }
+            //i = 0;
 
             printf("URL: %s\n", buf2);
 
@@ -241,10 +253,10 @@ int main(int argc, char **argv){
 
             if (buf2[0]=='h' && buf2[1]=='t' && buf2[2]=='t' && buf[3]=='p' && buf[4]==':' ) {
                 comeca = 7;
-                printf("l = 7\n");
+                //printf("l = 7\n");
             } else if (buf[0]=='h' && buf[1]=='t' && buf[2]=='t' && buf[3]=='p' && buf[4]=='s' && buf[5] == ':' ) {
                 comeca = 8;
-                printf("l = 8\n");
+                //printf("l = 8\n");
             }
 
             //printf("Link: %s\n", link);
@@ -254,19 +266,20 @@ int main(int argc, char **argv){
                 if(link[l] == '.'){
                     link[l] = '_';
                 }
-                if(link[l] == '/' && buf2[comeca] != '\0'){
-                    link[l] = '_';
-                }
+                //if(link[l] == '/' && buf2[comeca] != '\n'){
+                //    link[l] = '_';
+                //}
                 l++;
             }
 
-            printf("link[0] = %c\n", link[0]);
-            printf("link[1] = %c\n", link[1]);
-            printf("link[2] = %c\n", link[2]);
-            printf("link[3] = %c\n", link[3]);
-            printf("link[4] = %c\n", link[4]);
+            link[l++] = '.';
 
-            link[l-1] = '/';
+            printf("link[0] = %c\n", link[0]);
+            printf("l: %d\n", l);
+            //printf("link[1] = %c\n", link[1]);
+            //printf("link[2] = %c\n", link[2]);
+            //printf("link[3] = %c\n", link[3]);
+            //printf("link[4] = %c\n", link[4]);
 
             printf("Link: %s\n", link);
             
@@ -275,6 +288,8 @@ int main(int argc, char **argv){
             n++;
 
             CURL *curl = curl_easy_init();
+
+            //printf("Buf atual: %s\n", buf2);
 
             CURLcode r;
             //printf("URL: %s\n", buf2);
@@ -304,6 +319,7 @@ int main(int argc, char **argv){
             else{
                 //printf("Error: %s\n", curl_easy_strerror(r));
                 printf("Arquivo acabou!\n");
+                ativa = 0;
                 return 0;
             }
 
