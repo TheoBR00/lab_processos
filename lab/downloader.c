@@ -56,7 +56,7 @@
     
 //}
 
-void main(int argc, char **argv){
+int main(int argc, char **argv){
     pid_t filho;
 
     int fp;
@@ -153,9 +153,10 @@ void main(int argc, char **argv){
 
         FILE *escreve;
 
-        char buf[56];
+        char buf[1000];
         
-        char buf2[56];
+        //char buf2[56];
+        //char buf2[1000];
 
         char link[56];
 
@@ -184,6 +185,8 @@ void main(int argc, char **argv){
 
         int bytes_read = 1;
 
+        int ativa = 1;
+
         int num = 0;
         int k = 0;
         int rep = 0;
@@ -192,19 +195,24 @@ void main(int argc, char **argv){
 
         int m;
 
-        while(bytes_read > 0){
-            bytes_read = read(fp, &buf, 55);
+        while(bytes_read > 0 || ativa == 1){
+            bytes_read = read(fp, &buf, 300);
             printf("Buf %d: %s\n", k, buf);
 
-            char buf2[56];
+            rep++;
+
+            //printf("REP: %d\n", rep);
+
+            //printf("BYTES READ: %d\n", bytes_read);
+            char buf2[1000];
 
             int i = 0;
 
             int l = 0;
 
-            int comeca;
+            int comeca = 7;
 
-            int p;
+            //int p;
 
             for(m = n; buf[m] != '\0'; m++){
                 //printf("%c\n", buf[m]);
@@ -225,7 +233,32 @@ void main(int argc, char **argv){
                 i++;
             }
 
-            //for()
+            printf("URL: %s\n", buf2);
+
+            //buf2[i] = '\0';
+
+            
+
+            if (buf2[0]=='h' && buf2[1]=='t' && buf2[2]=='t' && buf[3]=='p' && buf[4]==':' ) {
+                comeca = 7;
+                printf("l = 7\n");
+            } else if (buf[0]=='h' && buf[1]=='t' && buf[2]=='t' && buf[3]=='p' && buf[4]=='s' && buf[5] == ':' ) {
+                comeca = 8;
+                printf("l = 8\n");
+            }
+
+            //printf("Link: %s\n", link);
+
+            for(l = 0; buf2[l] != '\0'; comeca++){
+                link[l] = buf2[comeca];
+                if(link[l] == '.'){
+                    link[l] = '_';
+                }
+                if(link[l] == '/' && buf2[comeca] != '\0'){
+                    link[l] = '_';
+                }
+                l++;
+            }
 
             printf("link[0] = %c\n", link[0]);
             printf("link[1] = %c\n", link[1]);
@@ -233,21 +266,7 @@ void main(int argc, char **argv){
             printf("link[3] = %c\n", link[3]);
             printf("link[4] = %c\n", link[4]);
 
-            if (link[0]=='h' && link[1]=='t' && link[2]=='t' && link[3]=='p' && link[4]==':' ) {
-                comeca = 7;
-                printf("l = 7\n");
-            } else if (link[0]=='h' && link[1]=='t' && link[2]=='t' && link[3]=='p' && link[4]=='s' && link[5] == ':' ) {
-                comeca = 8;
-                printf("l = 8\n");
-            }
-
-            //printf("Link: %s\n", link);
-
-            for(l = comeca; link[l] != '\0'; l++){
-                if(link[l] == '.' || link[l] == '/'){
-                    link[l] = '_';
-                }
-            }
+            link[l-1] = '/';
 
             printf("Link: %s\n", link);
             
@@ -258,7 +277,7 @@ void main(int argc, char **argv){
             CURL *curl = curl_easy_init();
 
             CURLcode r;
-            printf("URL: %s\n", buf2);
+            //printf("URL: %s\n", buf2);
             curl_easy_setopt(curl, CURLOPT_URL, buf2);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, escreve);
             curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
@@ -276,14 +295,17 @@ void main(int argc, char **argv){
                     if((CURLE_OK == r) && info){
                         printf("Resolvendo: %s\n", info);
                         printf("%s resolvida com sucesso!\n", buf2);
+                        //char buf2[1000];
                         //write(fd1, info, 1);
                         //close(fd1);
                     }
             }
 
-        else{
-            printf("Error: %s\n", curl_easy_strerror(r));
-        }
+            else{
+                //printf("Error: %s\n", curl_easy_strerror(r));
+                printf("Arquivo acabou!\n");
+                return 0;
+            }
 
             //write(escreve, &buf, 1);
             //printf("%s\n", buf);
@@ -347,5 +369,6 @@ void main(int argc, char **argv){
 
        
 }
+return 0;
 }
 
