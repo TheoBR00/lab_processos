@@ -100,7 +100,7 @@ int main(int argc, char **argv){
 
         //fp = fopen(argv[3], "wb");
         //file = open("lista_baixa.txt", O_WRONLY | O_CREAT, 0700);
-        file = fopen("lista_baixa.txt", "wb");
+        file = fopen(link, "wb");
 
         printf("Abriu arquivo\n");
 
@@ -153,7 +153,7 @@ int main(int argc, char **argv){
 
         FILE *escreve;
 
-        char buf[4500];
+        char buf[5000];
         
         //char buf2[56];
         //char buf2[1000];
@@ -191,12 +191,14 @@ int main(int argc, char **argv){
         int k = 0;
         int rep = 0;
 
+        int l = 0;
+
         int n = 0;
 
         int m;
 
         while(bytes_read > 0 || ativa == 1){
-            bytes_read = read(fp, &buf, 4500);
+            bytes_read = read(fp, &buf, 5000);
             printf("Buf %d: %s\n", k, buf);
 
             rep++;
@@ -204,11 +206,9 @@ int main(int argc, char **argv){
             //printf("REP: %d\n", rep);
 
             //printf("BYTES READ: %d\n", bytes_read);
-            char buf2[4000];
+            char buf2[5000];
 
             int i = 0;
-
-            int l = 0;
 
             int comeca = 7;
 
@@ -240,11 +240,12 @@ int main(int argc, char **argv){
                 //if(rep % 2 == 0){
                 //    break;
                 //}
-                printf("%c\n", buf2[i]);
+                //printf("%c\n", buf2[i]);
                 i++;
             }
+            buf2[i] = '\0';
             //i = 0;
-
+            sleep(1);
             printf("URL: %s\n", buf2);
 
             //buf2[i] = '\0';
@@ -266,9 +267,9 @@ int main(int argc, char **argv){
                 if(link[l] == '.'){
                     link[l] = '_';
                 }
-                //if(link[l] == '/' && buf2[comeca] != '\n'){
-                //    link[l] = '_';
-                //}
+                if(link[l] == '/' && buf2[comeca] != '\n'){
+                    link[l] = '_';
+                }
                 l++;
             }
 
