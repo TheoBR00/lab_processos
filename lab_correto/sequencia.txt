@@ -1,0 +1,9 @@
+Primeiro passo: Ler caractere por caractere até encontrar o \n ou o EOF.
+
+Se ele ler o \n, ele preenche o buf2 com \0 e vai para o terceiro passo
+
+Segundo passo: Enquanto isso vai preenchendo o buf2.
+
+Terceiro passo: Fazer o fork e dentro do if filho, baixar o arquivo. 
+
+Volta para o primeiro passo. 
