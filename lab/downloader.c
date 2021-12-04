@@ -179,8 +179,6 @@ int main(int argc, char **argv){
         //sleep(2);
         //printf("%c\n", fp[0]);
 
-        escreve = fopen("lista_html.txt", "wb");
-
         printf("Abriu arq\n");
 
         int bytes_read = 1;
@@ -191,7 +189,7 @@ int main(int argc, char **argv){
         int k = 0;
         int rep = 0;
 
-        int l = 0;
+        //int l = 0;
 
         int n = 0;
 
@@ -199,7 +197,7 @@ int main(int argc, char **argv){
 
         while(bytes_read > 0 || ativa == 1){
             bytes_read = read(fp, &buf, 5000);
-            printf("Buf %d: %s\n", k, buf);
+            //printf("Buf %d: %s\n", k, buf);
 
             rep++;
 
@@ -209,6 +207,8 @@ int main(int argc, char **argv){
             char buf2[5000];
 
             int i = 0;
+
+            int l = 0;
 
             int comeca = 7;
 
@@ -267,13 +267,18 @@ int main(int argc, char **argv){
                 if(link[l] == '.'){
                     link[l] = '_';
                 }
-                if(link[l] == '/' && buf2[comeca] != '\n'){
+                if(link[l] == '/' && buf2[comeca] != '\0'){
                     link[l] = '_';
                 }
                 l++;
             }
 
-            link[l++] = '.';
+            link[l-9] = '.';
+            link[l-8] = 'h';
+            link[l-7] = 't';
+            link[l-6] = 'm';
+            link[l-5] = 'l';
+            link[l-4] = '\0';
 
             printf("link[0] = %c\n", link[0]);
             printf("l: %d\n", l);
@@ -287,6 +292,9 @@ int main(int argc, char **argv){
             n = m;
             
             n++;
+
+            //escreve = fopen("lista_html.txt", "wb");
+            escreve = fopen(link, "wb");
 
             CURL *curl = curl_easy_init();
 
