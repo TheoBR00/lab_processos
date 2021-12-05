@@ -143,9 +143,9 @@ int main(int argc, char **argv){
 
         int ativa = 1;
 
-        int num = 0;
-        int k = 0;
-        int rep = 0;
+        //int num = 0;
+        //int k = 0;
+        //int rep = 0;
 
         //int l = 0;
 
@@ -159,9 +159,9 @@ int main(int argc, char **argv){
 
         //pid_t processo_filho;
 
-        int n = 0;
+        //int n = 0;
 
-        int m;
+        int m = 0;
 
         //while(bytes_read > 0 || ativa == 1){
         //    bytes_read = read(fp, &buf, 1);
@@ -190,7 +190,7 @@ int main(int argc, char **argv){
 
             //int comeca = 7;
 
-            int p = 0;
+            //int p = 0;
 
             while(ativa){
                 bytes_read = read(fp, &buf, 1);
@@ -219,11 +219,11 @@ int main(int argc, char **argv){
 
                     if (buf2[0]=='h' && buf2[1]=='t' && buf2[2]=='t' && buf[3]=='p' && buf[4]==':' ) {
                             comeca = 7;
-                            int comeca_2 = comeca;
+                            //int comeca_2 = comeca;
                             //("l = 7\n");
                     } else if (buf[0]=='h' && buf[1]=='t' && buf[2]=='t' && buf[3]=='p' && buf[4]=='s' && buf[5] == ':' ) {
                             comeca = 8;
-                            int comeca_2 = comeca;
+                            //int comeca_2 = comeca;
                             //printf("l = 8\n");
                         }
 
@@ -235,11 +235,11 @@ int main(int argc, char **argv){
                         link[j] = buf2[comeca];
                         if(link[j] == '.'){
                             link[j] = '_';
-                            p = j;
+                            //p = j;
                         }
                         if(link[j] == '.' || link[j] == '/'){
                             link[j] = '_';
-                            p = j;
+                            //p = j;
                         }
                         //else if(link[j] == '/' && link[j++] == '\0'){
                         //    p = j;
@@ -249,8 +249,8 @@ int main(int argc, char **argv){
                         j++;
                     }
                     comeca = 7;
-                    sleep(1);
-                    printf("p: %d\n", p);
+                    //sleep(1);
+                    //printf("p: %d\n", p);
                     //printf("j: %d URL: %s\n", j, link);
                     link[j++] = '.';
                     link[j++] = 'h';
@@ -264,7 +264,7 @@ int main(int argc, char **argv){
                     
                     //strcat(link, ".html\0");
                     //p = 0;
-                    sleep(2);
+                    //sleep(2);
                     printf("Link: %s\n", link);
                     //sleep(10);
                     escreve = fopen(link, "wb");
@@ -278,7 +278,7 @@ int main(int argc, char **argv){
 
                     if(filho == 0){
 
-                        pid_t process = getpid();
+                        //pid_t process = getpid();
 
                         //sleep(2);
 
@@ -307,13 +307,13 @@ int main(int argc, char **argv){
                             char *info;
                             r = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &info);
 
-                            printf("Pegou info\n");
+                            //printf("Pegou info\n");
 
                             if((CURLE_OK == r) && info){
                                 printf("Resolvendo: %s\n", info);
                                 printf("%s resolvida com sucesso!\n", buf2);
                                 //printf("Passou 1\n");
-                                sleep(2);
+                                //sleep(2);
                                 //printf("Passou 2\n");
                                 ativa = 0;
                                 //printf("Bytes read: %d\n", bytes_read);
@@ -352,11 +352,12 @@ int main(int argc, char **argv){
 
                     else{
                         int wstatus;
-                        pid_t pid_terminou;
+                        //pid_t pid_terminou;
 
                         //kill(filho, SIGKILL);
+                        wait(&wstatus);
 
-                        pid_terminou = waitpid(filho, &wstatus, WNOHANG);
+                        //pid_t pid_terminou = waitpid(filho, &wstatus, WNOHANG);
                     }
 
                     sleep(3);
