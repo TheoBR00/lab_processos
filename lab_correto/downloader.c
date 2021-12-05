@@ -116,7 +116,7 @@ int main(int argc, char **argv){
         //char buf2[56];
         //char buf2[1000];
 
-        char link[56];
+        //char link[56];
 
     //filho = fork();
 
@@ -199,48 +199,39 @@ int main(int argc, char **argv){
 
                 int j = 0;
 
-                //printf("Bytes read: %d\n", bytes_read);
+                char link[56];
 
-                //printf("Buf original: %s\n", buf);
+                //int comeca = 0;
 
-
-            //for(m = n; buf[m] != '\n'; m++){
-                //printf("%c\n", buf[m]);
-                //if(buf[m] == '"'){
-                //    rep++;
-                //}
-                //value = strcmp(&buf[i], &test);
-                //printf("Value: %d\n", value);
-
-                //if(buf[i] == '\n'){
-                //    i = 0;
-                //    break;
-                //}
+                
                 if(buf[m] == '\n'){
-                    printf("Bytes read: %d\n", bytes_read);
+                    //printf("Bytes read: %d\n", bytes_read);
                     buf2[i] = '\0';
-                    printf("URL: %s\n", buf2);
+                    //printf("URL: %s\n", buf2);
                     //p = 0;
 
-                    printf("buf2[0] = %c\n", buf2[0]);
-                    printf("buf2[1] = %c\n", buf2[1]);
-                    printf("buf2[2] = %c\n", buf2[2]);
-                    printf("buf2[3] = %c\n", buf2[3]);
-                    printf("buf2[4] = %c\n", buf2[4]);
-                    printf("buf2[5] = %c\n", buf2[5]);
+                    //printf("buf2[0] = %c\n", buf2[0]);
+                    //printf("buf2[1] = %c\n", buf2[1]);
+                    //printf("buf2[2] = %c\n", buf2[2]);
+                    //printf("buf2[3] = %c\n", buf2[3]);
+                    //printf("buf2[4] = %c\n", buf2[4]);
+                    //printf("buf2[5] = %c\n", buf2[5]);
 
                     if (buf2[0]=='h' && buf2[1]=='t' && buf2[2]=='t' && buf[3]=='p' && buf[4]==':' ) {
-                            int comeca = 7;
-                            printf("l = 7\n");
+                            comeca = 7;
+                            int comeca_2 = comeca;
+                            //("l = 7\n");
                     } else if (buf[0]=='h' && buf[1]=='t' && buf[2]=='t' && buf[3]=='p' && buf[4]=='s' && buf[5] == ':' ) {
-                            int comeca = 8;
-                            printf("l = 8\n");
+                            comeca = 8;
+                            int comeca_2 = comeca;
+                            //printf("l = 8\n");
                         }
 
 
-                    //printf("Link: %s\n", link);
+                    //printf("Comeca: %d\n", comeca_2);
 
-                    for(j = 0; buf2[j] != '\0'; comeca++){
+                    for(j = 0; buf2[comeca] != '\0'; comeca++){
+                        //printf("COMEÇA: %d\n", comeca);
                         link[j] = buf2[comeca];
                         if(link[j] == '.'){
                             link[j] = '_';
@@ -250,21 +241,28 @@ int main(int argc, char **argv){
                             link[j] = '_';
                             p = j;
                         }
-                        else if(link[j] == '/' && link[j++] == '\0'){
-                            p = j;
-                            printf("Break\n");
-                            break;
-                        }
+                        //else if(link[j] == '/' && link[j++] == '\0'){
+                        //    p = j;
+                        //    break;
+                        //}
+                        //printf("Dentro: %s\n", link);
                         j++;
                     }
+                    comeca = 7;
+                    sleep(1);
                     printf("p: %d\n", p);
-                    printf("l: %d URL: %s\n", j, buf2);
-                    link[j-p] = '.';
-                    link[(j-p)+1] = 'h';
-                    link[(j-p)+2] = 't';
-                    link[(j-p)+3] = 'm';
-                    link[(j-p)+4] = 'l';
-                    link[(j-p)+5] = '\0';
+                    //printf("j: %d URL: %s\n", j, link);
+                    link[j++] = '.';
+                    link[j++] = 'h';
+                    link[j++] = 't';
+                    link[j++] = 'm';
+                    link[j++] = 'l';
+                    link[j++] = '\0';
+
+                    //printf("Link anterior: %s\n", link);
+
+                    
+                    //strcat(link, ".html\0");
                     //p = 0;
                     sleep(2);
                     printf("Link: %s\n", link);
@@ -303,9 +301,7 @@ int main(int argc, char **argv){
                         r = curl_easy_perform(curl);
                         //sleep(4);
 
-                        printf("Buf2: %s\n", buf2);
-
-                        printf("r: %d\n", r);
+                        //printf("r: %d\n", r);
 
                         if(CURLE_OK == r){
                             char *info;
@@ -316,11 +312,11 @@ int main(int argc, char **argv){
                             if((CURLE_OK == r) && info){
                                 printf("Resolvendo: %s\n", info);
                                 printf("%s resolvida com sucesso!\n", buf2);
-                                printf("Passou 1\n");
+                                //printf("Passou 1\n");
                                 sleep(2);
-                                printf("Passou 2\n");
+                                //printf("Passou 2\n");
                                 ativa = 0;
-                                printf("Bytes read: %d\n", bytes_read);
+                                //printf("Bytes read: %d\n", bytes_read);
                                 //sleep(10);
                                 //if(bytes_read == 1){
                                 //    printf("CLOSE\n");
@@ -328,7 +324,7 @@ int main(int argc, char **argv){
                                 //}
                                 //return 0;
 
-                                printf("Passou 3\n");
+                                //printf("Passou 3\n");
 
                                 //char buf2[1000];
                                 //write(fd1, info, 1);
@@ -345,7 +341,7 @@ int main(int argc, char **argv){
                         }
 
                         if(bytes_read < 1){
-                            printf("AQUI É 0\n");
+                            //printf("AQUI É 0\n");
                             break;
                         }
 
@@ -358,18 +354,12 @@ int main(int argc, char **argv){
                         int wstatus;
                         pid_t pid_terminou;
 
-                        printf("Entrou waitpid\n");
-
                         //kill(filho, SIGKILL);
 
                         pid_terminou = waitpid(filho, &wstatus, WNOHANG);
                     }
 
-                    sleep(10);
-                    printf("Depois do filho\n");
-
-                    
-                    //return 0;
+                    sleep(3);
                     
                 }
 
