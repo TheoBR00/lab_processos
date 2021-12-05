@@ -21,7 +21,7 @@ int main(int argc, char **argv){
     FILE *file;
 
     if(argc < 3){
-        printf("Entrou argc < 3\n");
+        //printf("Entrou argc < 3\n");
         char link[1000];
 
        int i = 0;
@@ -40,7 +40,7 @@ int main(int argc, char **argv){
            if(link[j] == '.' || link[j] == '/'){
                link[j] = '_';
            }
-           printf("Linha 87: %c\n", link[j]);
+           //printf("Linha 87: %c\n", link[j]);
            j++;
        }
        //sleep(10);
@@ -52,30 +52,30 @@ int main(int argc, char **argv){
        link[j++] = '\0';
 
         
-        printf("Link: %s\n", link);
+        //printf("Link: %s\n", link);
         //sleep(10);
 
         //fp = fopen(argv[3], "wb");
         //file = open("lista_baixa.txt", O_WRONLY | O_CREAT, 0700);
         file = fopen(link, "wb");
 
-        printf("Abriu arquivo\n");
+        //printf("Abriu arquivo\n");
 
         CURL *curl = curl_easy_init();
 
         if(curl){
 
-        printf("Fez curl init\n");
+        //printf("Fez curl init\n");
 
         CURLcode r;
         curl_easy_setopt(curl, CURLOPT_URL, argv[1]);
-        printf("Fez 1 perform\n");
+        //printf("Fez 1 perform\n");
         //sleep(2);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
-        printf("Fez segundo perform\n");
+        //printf("Fez segundo perform\n");
         curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
         r = curl_easy_perform(curl);
-        printf("Fez terceiro perform\n");
+        //printf("Fez terceiro perform\n");
         //sleep(2);
 
         printf("%d\n", r);
@@ -84,10 +84,11 @@ int main(int argc, char **argv){
             char *info;
                 r = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &info);
 
-                printf("Pegou info\n");
+                //printf("Pegou info\n");
 
                 if((CURLE_OK == r) && info){
                     printf("Resolvendo: %s\n", info);
+                    printf("%s baixada com sucesso\n", argv[1]);
                     //write(fd1, info, 1);
                     //close(fd1);
                 }
@@ -150,7 +151,7 @@ int main(int argc, char **argv){
 
         int i = 0;
 
-        int l = 0;
+        //int j = 0;
 
         int comeca = 7;
 
@@ -194,6 +195,10 @@ int main(int argc, char **argv){
             while(ativa){
                 bytes_read = read(fp, &buf, 1);
 
+                int j = 0;
+
+                //printf("Bytes read: %d\n", bytes_read);
+
                 //printf("Buf original: %s\n", buf);
 
 
@@ -210,13 +215,53 @@ int main(int argc, char **argv){
                 //    break;
                 //}
                 if(buf[m] == '\n'){
+                    printf("Bytes read: %d\n", bytes_read);
                     buf2[i] = '\0';
                     printf("URL: %s\n", buf2);
+
+                    printf("buf2[0] = %c\n", buf2[0]);
+                    printf("buf2[1] = %c\n", buf2[1]);
+                    printf("buf2[2] = %c\n", buf2[2]);
+                    printf("buf2[3] = %c\n", buf2[3]);
+                    printf("buf2[4] = %c\n", buf2[4]);
+                    printf("buf2[5] = %c\n", buf2[5]);
+
+                    if (buf2[0]=='h' && buf2[1]=='t' && buf2[2]=='t' && buf[3]=='p' && buf[4]==':' ) {
+                            int comeca = 7;
+                            printf("l = 7\n");
+                    } else if (buf[0]=='h' && buf[1]=='t' && buf[2]=='t' && buf[3]=='p' && buf[4]=='s' && buf[5] == ':' ) {
+                            int comeca = 8;
+                            printf("l = 8\n");
+                        }
+
+
+                    //printf("Link: %s\n", link);
+
+                    for(j = 0; buf2[j] != '\0'; comeca++){
+                        link[j] = buf2[comeca];
+                        if(link[j] == '.'){
+                            link[j] = '_';
+                        }
+                        if(link[j] == '.' || link[j] == '/'){
+                            link[j] = '_';
+                        }
+                        j++;
+                    }
+                    printf("l: %d URL: %s\n", j, buf2);
+                    //link[j-9] = '.';
+                    //link[j-8] = 'h';
+                    //link[j-7] = 't';
+                    //link[j-6] = 'm';
+                    //link[j-5] = 'l';
+                    //link[j-4] = '\0';
                     sleep(2);
-                    escreve = fopen("lista_nova.txt", "wb");
+                    printf("Link: %s\n", link);
+                    //sleep(10);
+                    escreve = fopen(link, "wb");
 
                     //i++;
                     i = m;
+                    //j = 0;
 
                     filho = fork();
 
@@ -225,6 +270,8 @@ int main(int argc, char **argv){
                         sleep(2);
 
                         CURL *curl = curl_easy_init();
+
+                        
 
                         //printf("Buf atual: %s\n", buf2);
 
@@ -278,12 +325,21 @@ int main(int argc, char **argv){
 
                         return 0;
                     }
+
+                    //int wstatus;
+                    //pid_t pid_terminou;
+
+                    //pid_terminou = waitpid(filho, &wstatus, WNOHANG);
+                    //return 0;
                     
                 }
 
                 else{
                     buf2[i] = buf[m];
                     i++;
+                    if(bytes_read == 0){
+                        break;
+                    }
                 }
                 
 
