@@ -190,10 +190,12 @@ int main(int argc, char **argv){
 
             //int comeca = 7;
 
-            //int p;
+            int p = 0;
 
             while(ativa){
                 bytes_read = read(fp, &buf, 1);
+
+                //printf("Bytes read: %d\n", bytes_read);
 
                 int j = 0;
 
@@ -218,6 +220,7 @@ int main(int argc, char **argv){
                     printf("Bytes read: %d\n", bytes_read);
                     buf2[i] = '\0';
                     printf("URL: %s\n", buf2);
+                    //p = 0;
 
                     printf("buf2[0] = %c\n", buf2[0]);
                     printf("buf2[1] = %c\n", buf2[1]);
@@ -241,33 +244,45 @@ int main(int argc, char **argv){
                         link[j] = buf2[comeca];
                         if(link[j] == '.'){
                             link[j] = '_';
+                            p = j;
                         }
                         if(link[j] == '.' || link[j] == '/'){
                             link[j] = '_';
+                            p = j;
+                        }
+                        else if(link[j] == '/' && link[j++] == '\0'){
+                            p = j;
+                            printf("Break\n");
+                            break;
                         }
                         j++;
                     }
+                    printf("p: %d\n", p);
                     printf("l: %d URL: %s\n", j, buf2);
-                    //link[j-9] = '.';
-                    //link[j-8] = 'h';
-                    //link[j-7] = 't';
-                    //link[j-6] = 'm';
-                    //link[j-5] = 'l';
-                    //link[j-4] = '\0';
+                    link[j-p] = '.';
+                    link[(j-p)+1] = 'h';
+                    link[(j-p)+2] = 't';
+                    link[(j-p)+3] = 'm';
+                    link[(j-p)+4] = 'l';
+                    link[(j-p)+5] = '\0';
+                    //p = 0;
                     sleep(2);
                     printf("Link: %s\n", link);
                     //sleep(10);
                     escreve = fopen(link, "wb");
 
-                    //i++;
+                    i++;
                     i = m;
                     //j = 0;
+                    //p = 0;
 
                     filho = fork();
 
                     if(filho == 0){
 
-                        sleep(2);
+                        pid_t process = getpid();
+
+                        //sleep(2);
 
                         CURL *curl = curl_easy_init();
 
@@ -286,7 +301,7 @@ int main(int argc, char **argv){
                         curl_easy_setopt(curl, CURLOPT_WRITEDATA, escreve);
                         curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
                         r = curl_easy_perform(curl);
-                        sleep(4);
+                        //sleep(4);
 
                         printf("Buf2: %s\n", buf2);
 
@@ -302,9 +317,18 @@ int main(int argc, char **argv){
                                 printf("Resolvendo: %s\n", info);
                                 printf("%s resolvida com sucesso!\n", buf2);
                                 printf("Passou 1\n");
-                                //sleep(2);
+                                sleep(2);
+                                printf("Passou 2\n");
+                                ativa = 0;
+                                printf("Bytes read: %d\n", bytes_read);
                                 //sleep(10);
-                                return 0;
+                                //if(bytes_read == 1){
+                                //    printf("CLOSE\n");
+                                //    fclose(escreve);
+                                //}
+                                //return 0;
+
+                                printf("Passou 3\n");
 
                                 //char buf2[1000];
                                 //write(fd1, info, 1);
@@ -316,20 +340,35 @@ int main(int argc, char **argv){
                             printf("Error: %s\n", curl_easy_strerror(r));
                             printf("Arquivo acabou!\n");
                             ativa = 0;
+                            sleep(4);
                             return 0;
                         }
-                    
 
+                        if(bytes_read < 1){
+                            printf("AQUI É 0\n");
+                            break;
+                        }
 
 
 
                         return 0;
                     }
 
-                    //int wstatus;
-                    //pid_t pid_terminou;
+                    else{
+                        int wstatus;
+                        pid_t pid_terminou;
 
-                    //pid_terminou = waitpid(filho, &wstatus, WNOHANG);
+                        printf("Entrou waitpid\n");
+
+                        //kill(filho, SIGKILL);
+
+                        pid_terminou = waitpid(filho, &wstatus, WNOHANG);
+                    }
+
+                    sleep(10);
+                    printf("Depois do filho\n");
+
+                    
                     //return 0;
                     
                 }
@@ -338,9 +377,11 @@ int main(int argc, char **argv){
                     buf2[i] = buf[m];
                     i++;
                     if(bytes_read == 0){
-                        break;
+                        return 0;
                     }
                 }
+
+                //return 0;
                 
 
                 
@@ -498,7 +539,7 @@ int main(int argc, char **argv){
         
 
 
-        //return 0;
+    return 0;
     }
 
     //else{
